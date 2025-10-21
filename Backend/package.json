@@ -2,9 +2,10 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "A tool to help individuals and organizations learn from past incidents and prevent them from recurring. ",
+  "type": "module",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "scripts": { 
+    "dev" : "nodemon src/index.js"
   },
   "keywords": [
     "Be curious",
@@ -12,5 +13,8 @@
     "Understand deeply"
   ],
   "author": "Jagan Mohan Reddy Pokala",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
 }
