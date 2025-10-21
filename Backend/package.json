@@ -4,8 +4,8 @@
   "description": "A tool to help individuals and organizations learn from past incidents and prevent them from recurring. ",
   "type": "module",
   "main": "index.js",
-  "scripts": { 
-    "dev" : "nodemon src/index.js"
+  "scripts": {
+    "dev": "nodemon src/index.js"
   },
   "keywords": [
     "Be curious",
@@ -15,6 +15,7 @@
   "author": "Jagan Mohan Reddy Pokala",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2"
   }
 }
