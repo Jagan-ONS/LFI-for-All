@@ -1,0 +1,16 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "A tool to help individuals and organizations learn from past incidents and prevent them from recurring. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Be curious",
+    "Be consitsant",
+    "Understand deeply"
+  ],
+  "author": "Jagan Mohan Reddy Pokala",
+  "license": "ISC"
+}
