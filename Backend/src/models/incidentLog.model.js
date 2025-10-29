@@ -1,4 +1,6 @@
 import mongoose, { Schema } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2"
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
 
 const incidentLogSchema = new Schema(
     {
@@ -47,4 +49,7 @@ const incidentLogSchema = new Schema(
     }
 );
 
+//we have to use paginate to fecthc all the logs of a user 
+incidentLogSchema.plugin(mongoosePaginate)
+incidentLogSchema.plugin(mongooseAggregatePaginate)
 export const IncidentLog = mongoose.model("IncidentLog", incidentLogSchema);

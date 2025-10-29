@@ -34,4 +34,8 @@ const reminderSchema = new Schema(
     }
 );
 
+//in this we will query for are there any reminders todays
+//we may have atmax have 10 may be 20 reminders we don't need pagination for this
+// 
+
 export const Reminder = mongoose.model("Reminder", reminderSchema);

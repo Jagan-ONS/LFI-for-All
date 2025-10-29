@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2"
 
 const habitSchema = new Schema(
     {
@@ -7,6 +8,10 @@ const habitSchema = new Schema(
             required: true,
             trim: true
         },
+        // month : {
+        //     type : Number,
+        //     required : true
+        // },
         description: {
             type: String
         },
@@ -23,7 +28,12 @@ const habitSchema = new Schema(
     },
     {
         timestamps: true
+        // i have to get month from this in the backend 
     }
 );
+
+//we query this along with the month 
+//so we will get at max 7 8 habbits which we are doing in that month
+habitSchema.plugin(mongoosePaginate)
 
 export const Habit = mongoose.model("Habit", habitSchema);

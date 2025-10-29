@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const journalSchema = new Schema(
     {
@@ -33,5 +34,11 @@ const journalSchema = new Schema(
         timestamps: true
     }
 );
+
+//we can see previous days journal
+//if i write any query to get all journals of a page we need to paginate
+//else if i write queries like the journal of a user on some date we don't need it 
+//lets just add paginate eventhough we don't use it for now 
+journalSchema.plugin(mongoosePaginate)
 
 export const Journal = mongoose.model("Journal", journalSchema);
