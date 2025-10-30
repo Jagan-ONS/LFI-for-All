@@ -1,5 +1,8 @@
 import mongoose,{Schema} from "mongoose"
 import mongoosePaginate from "mongoose-paginate-v2"
+import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt"
+
 const userSchema = new Schema(
     {
         username : {
@@ -48,6 +51,43 @@ const userSchema = new Schema(
     }
 )
 
-userSchema.plugin(mongoosePaginate);
+userSchema.pre("save", async function(next){
+    //we only update pass if it's changed 
+    if(!this.isModified("passwordHash")) return next();
+    this.passwordHash = await bcrypt.hash(this.passwordHash,10);
+    next()
+})
 
+userSchema.methods.isPasswordCorrect = async function(password){
+    return await bcrypt.compare(password,this.passwordHash)
+} 
+
+userSchema.methods.generateAccessToken = function(){
+    return jwt.sign(
+        {
+            _id : this._id,
+            email : this.email,
+            username : this.username,
+            fullName : this.fullName
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn : process.env.ACCESS_TOKEN_EXPIRY
+        }
+    )
+}
+
+userSchema.methods.generateRefreshToken = function(){
+    return jwt.sign(
+        {
+            _id : this._id
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn : process.env.REFRESH_TOKEN_EXPIRY
+        }
+    )
+}
+
+userSchema.plugin(mongoosePaginate);
 export const User = mongoose.model("User",userSchema)
