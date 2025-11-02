@@ -34,7 +34,7 @@ const userSchema = new Schema(
             type : String,
             default : "Hey , how are you..?"
         },
-        passwordHash : {
+        password : {
             type : String,
         },
         googleId : {
@@ -53,13 +53,13 @@ const userSchema = new Schema(
 
 userSchema.pre("save", async function(next){
     //we only update pass if it's changed 
-    if(!this.isModified("passwordHash")) return next();
-    this.passwordHash = await bcrypt.hash(this.passwordHash,10);
+    if(!this.isModified("password")) return next();
+    this.password = await bcrypt.hash(this.password,10);
     next()
 })
 
 userSchema.methods.isPasswordCorrect = async function(password){
-    return await bcrypt.compare(password,this.passwordHash)
+    return await bcrypt.compare(password,this.password)
 } 
 
 userSchema.methods.generateAccessToken = function(){
@@ -90,4 +90,5 @@ userSchema.methods.generateRefreshToken = function(){
 }
 
 userSchema.plugin(mongoosePaginate);
+
 export const User = mongoose.model("User",userSchema)
