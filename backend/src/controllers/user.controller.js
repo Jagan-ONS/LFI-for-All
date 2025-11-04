@@ -158,7 +158,7 @@ const refreshAccessToken = asyncHandler(async (req,res) => {
             httpOnly : true,
             secure : true
         }
-        const {accessToken , newRefreshToken} = await generateAccessAndRefreshToken(user._id)
+        const {accessToken , newRefreshToken} = await generateAccessAndRefreshTokens(user._id)
         return res
         .status(200)
         .cookie("accessToken",accessToken,options)
@@ -187,7 +187,7 @@ const refreshAccessToken = asyncHandler(async (req,res) => {
 //or handles the errors safely
 
 //this funciton takes an userid and generates access and refresh tokens
-const generateAccessAndRefreshToken = async(userId) => {
+const generateAccessAndRefreshTokens = async(userId) => {
     //why haven't we used async handler
     try{
         const user = await User.findById({userId});
@@ -216,9 +216,12 @@ const generateAccessAndRefreshToken = async(userId) => {
 //why do we use this first i will find why we use this
 //and later i will code it  
 const getCurrentUser = asyncHandler(async (req,res) => {
-    
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,req.user,"User details fetched successfully")
+    )
 })
-
 //now i will add the google auth and later i will add phone number
 //login 
 
@@ -232,6 +235,8 @@ const getCurrentUser = asyncHandler(async (req,res) => {
 export {
     registerUser,
     loginUser,
+    getCurrentUser,
+    refreshAccessToken
 }
 
 //what does a user in my app can do 
