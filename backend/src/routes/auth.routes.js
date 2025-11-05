@@ -28,4 +28,18 @@ router.get(
   }
 );
 
+// In user.routes.js
+router.post(
+  '/login',
+  passport.authenticate('local', {
+    // 'local' tells passport to use the LocalStrategy
+    failureRedirect: 'http://localhost:3000/login', // Or send a JSON error
+  }),
+  (req, res) => {
+    // If code reaches here, authentication was successful.
+    // Session is established by passport.serializeUser
+    res.status(200).json(new ApiResponse(200, req.user, "Logged in successfully"));
+  }
+);
+
 export default router;

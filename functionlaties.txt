@@ -1,0 +1,68 @@
+i'm thinking the content of the pages for now is as follows 
+
+1 - Sign up / Sign in page 
+1.1 this is simple page just for signing and logging in but we can sign in using mobile number, mail , OAuth, gmial login and all the things which can be done in signup/login page .(i can just do it simply but i want to learn all things which can be done so i will implements every thing)
+
+2 - Main Page : 
+2.1 links for other pages in the sidebar or topbar 
+2.2 there will be incidents of subscribed or followed persons or global logs (we can follow some global logs ) in the middle , side bar will be in the left side it takes less space , we can also minize sidebar. these logs will be in the middle,
+2.3 there will be some other containers like frequent mistake or top 5 things you have to keep in mind, some high clarity quotes from motivators (we can choose this from any sacred texts or some motivational speakers or books or etc this will be in the user hand he can choose which type of pictures he want to see here, and also most liked incident logs, most follwed person . these all will be in right side just like codeforces home page where it shows top contributes , top ratings erc,
+2.4 in right side along with all these there will be notification box which shows neareset remider and weakly and monthly summaries of incidents habbits and journal 
+
+3 - incident page 
+3.1 this page should contain 2 main buttons , 1 - add a incident log 2 - search some incident log based on context or some key word or siverety  
+3.2 below , this page will have all our incidents which we have logged in both +ve(incidents we done good due to this app) and -ve
+3.3 here also the right side part is same as main page but here we add more thins like the incidents which we starred to our future reference as slide i mean these will be visbble to use one after another there itselg 
+3.4 if we want to log an incident then we can click that log an incident button then a page or form will appear , if while loggin an incident we got stuck at root cause analysys , then there will be two buttons (discuss with chatgpt , discuss with another person(paid or unpair it depends the person he can set some price if someone want to chat with them))
+3.5 there will subscribe button which leads payments page (follow is different from subscribe, subscribe for root cause analysys discussion request , follow means free , we can view his posts)
+
+4- Reminder Page : 
+again this too will have right part and left part , in every page of this website we have right part and left part 
+4.1 right path contains some filterin options first of all at the top there will be the nearest reminder just like in main page , next the filter for the type of reminders b/w some dates , based on some context , and there will some block to add daily or weekly reminders since we con't do it for every day in the calender 
+4.2 left part contains a big calander each box will have to buttons view, add remiders on each date 
+(is this required ? we can just click on the date then we can what all the things like reminders and high sever (red) incidents and there we can also see buttons to add new reminders or edit the reminders) if there is any reminder on some date we can see some green circle on the date , if that date has any high sever incident which we have to keep in mind we will see that whole date red and on top of that there will be green circle if there are any remiders(ie if incident happened today and there is also reminder today) 
+4.3 - there are two types of remiders 0 just view some previous incident and some summary of all incidents of that context
+4.4 - notifications comes through mail, wattsapp and normal notification
+{
+preventive reminders : we can keep reminders about some category for certain time periods , for remembering things we should like interview things and some cs fundamental things or some things realted to communication or work or etc etc  
+
+daily reminders :  we should keep a few daily reminders in each category until we can do them involenterily , for the better approaching of future incidents 
+
+manual reminders : if we want to review the lfi of some category on some perticular time we can do that 
+
+sheduled reminders : if we have a sheduled meeting or a contest or some interview
+}  
+
+5 - LFI Journal Page 
+5.1 this page is like a normal journaling website , we can fix our timing like when we will write journal , we may write today journal after 12 , if this feature is not there if we write our jornal after 12 this goes to another day
+
+5.2 i have to implement the funcitonality of saving text as soon as we type 
+5.3 this will also send a remider to write journal , we can set when it will send the reminder usually just before sleep 
+5.4 different types of journals daily(normal one ) , weekly journal , mothly journal , yearly journal (this contains what do want to change what do we want to work towars),good journal, bad journal (these will be 2 to 3 line journals and for bad journals i want to implement a funcitonality of password protection), and some project journal(for trips or some project or some event etc etc for storing the moments of that event) 
+5.5 what about interactive journal??
+
+6   Habbit tracking page
+6.1 this is just a page with dates on left and the things we want to do daily on top, so that on perticular day if we have done some perticular work then we can fill with some color 
+6.2 for each activity we have to enter some description and time it took to do 
+6.3 at the end of the month it will give summary 
+
+7 profile page (of some user no only others, but the data visible can vary)
+7.1 this will contain the user details and no of different types of incident slogged or each category , severity 
+7.2 a graph of all incidents which show time line of all incidents , single graph but two lines for +ve , -ve incidents 
+7.3 we can also view in perticulatr category also (i mean we can select communication and we can view the graph for this )
+7.4 high severity incidents will be pointed red and other as respective color 
+7.5 it also contains heat map if he just entered journal light green , medium sever incident - green ,
+high sever incident - dark green , very high sever incident red 
+
+8 Overall search page 
+8.1 this is same as the search bar in incident page but here we can search user with their user name and searach based on some context severity etc..
+
+9 Settings page 
+for now i don't what this page contains but i will figure it out on the go 
+
+10 Payments page 
+this page is just for payments , i will learn about payments  
+
+update this to your memory,
+
+now i want you to clearly explain the complexity of each functionality , and how can we start building each functionality in simple way to more optimal way just like at first adding a button for reminder which will fetch all the incidents of that category and later using something like node corn etc ) , so for each functionality explain what we exactly do in that functionality and how should we do that from simple way to more optimal way 
