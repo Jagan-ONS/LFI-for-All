@@ -16,7 +16,7 @@ import { Like } from "../models/like.model.js";
 import { Comment } from "../models/comment.model.js";
 
 //left part 
-// export const getDashboardFeed = asyncHandler(async (req,req) => {
+// const getDashboardFeed = asyncHandler(async (req,req) => {
 //     //we need some 10 incident cards which shouws the basic details of that log
 //     const { page =1 , limit =10} = req.query
 
@@ -49,7 +49,7 @@ import { Comment } from "../models/comment.model.js";
 //     .json( new ApiResponse(200,logsList,"logs fetched successfully.."))
 // })
 
-export const getFeed = asyncHandler(async (req, res) => {
+const getFeed = asyncHandler(async (req, res) => {
     
     
     const { page = 1, limit = 10 } = req.query;
@@ -148,7 +148,7 @@ export const getFeed = asyncHandler(async (req, res) => {
 //whole top 5 things to keep in mind 
 //it's better to show them context wise
 
-export const getTopInsights = asyncHandler(async (req, res) => {
+const getTopInsights = asyncHandler(async (req, res) => {
     
     const allUserCategories = await IncidentLog.distinct("category", {
         owner: req.user._id
@@ -213,7 +213,7 @@ export const getTopInsights = asyncHandler(async (req, res) => {
 });
 
 
-export const getMostLikedIncidents = asyncHandler(async (req, res) => {
+const getMostLikedIncidents = asyncHandler(async (req, res) => {
     const {page = 1,limit = 10} = req.query
     const pageNum = parseInt(page)
     const limitNum = parseInt(limit)
@@ -248,7 +248,7 @@ export const getMostLikedIncidents = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, topIncidents, "Top incidents with most likes fetched successfully"));
 });
 
-export const getMostFollowedUsers = asyncHandler(async (req, res) => {
+const getMostFollowedUsers = asyncHandler(async (req, res) => {
     const {page = 1,limit = 10} = req.query
     const pageNum = parseInt(page)
     const limitNum = parseInt(limit)
@@ -282,7 +282,7 @@ export const getMostFollowedUsers = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, topUsers, "Top users with most followers fetched successfully"));
 });
 
-export const getNearestReminders = asyncHandler(async (req, res) => {
+const getNearestReminders = asyncHandler(async (req, res) => {
     const now = new Date();
     const userId = req.user._id;
 
@@ -346,4 +346,25 @@ export const getNearestReminders = asyncHandler(async (req, res) => {
         .status(200)
         .json(new ApiResponse(200, allUpcomingOccurrences, "Nearest 3 reminders fetched"));
 });
+
+const getRecentLogs = asyncHandler(async (req,res) => {
+    //so that i can show the titles of them as recent actions 
+
+})
+
+const getQuickInsights = asyncHandler(async(req,res) => {
+    //if enter some category we will get the quick insigts of that category 
+    //this will just send the data, how it is shown is done by frontend 
+})
+
+export {
+    getFeed,
+    getMostFollowedUsers,
+    getMostLikedIncidents,
+    getNearestReminders,
+    getTopInsights,
+    getMostFollowedUsers,
+    getRecentLogs,
+    getQuickInsights
+}
 

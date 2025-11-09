@@ -93,4 +93,39 @@ export function startScheduler(io) {
             console.error("[Scheduler] Error handling periodic reminders:", error);
         }
     });
+
+    cron.schedule('0 0 * * *', async () => {
+        // Runs every day at 00:00 (midnight)
+        console.log('[Scheduler] Running nightly cleanup job...');
+        
+        // 1. Calculate the date 30 days ago
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        try {
+            // 2. Define the cleanup query
+            const query = {
+                // Only delete reminders that have been 'dismissed' (sent)
+                status: 'dismissed',
+                
+                // Only delete one-time reminders ('manual' or 'scheduled')
+                reminderType: { $in: ['manual', 'scheduled'] },
+                
+                // Only delete those that were set for a time older than 30 days ago
+                remindAt: { $lt: thirtyDaysAgo }
+            };
+
+            // 3. Run the delete operation
+            const deleteResult = await Reminder.deleteMany(query);
+
+            if (deleteResult.deletedCount > 0) {
+                console.log(`[Scheduler] Cleaned up ${deleteResult.deletedCount} old reminders.`);
+            } else {
+                console.log('[Scheduler] No old reminders to clean up.');
+            }
+
+        } catch (error) {
+            console.error("[Scheduler] Error during nightly cleanup:", error);
+        }
+    });
 }

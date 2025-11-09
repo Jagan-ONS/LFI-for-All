@@ -225,13 +225,6 @@ const getCurrentUser = asyncHandler(async (req,res) => {
 //now i will add the google auth and later i will add phone number
 //login 
 
-
-
-
-
-
-
-
 export {
     registerUser,
     loginUser,

@@ -27,7 +27,8 @@ const reminderSchema = new Schema(
         },
         description: { // The manual or AI-generated summary
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
         
         // --- Fields for different reminder types ---
