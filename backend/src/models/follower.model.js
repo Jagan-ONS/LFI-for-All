@@ -3,12 +3,12 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
 
 const followerSchema = new Schema(
     {
-        followingId: { // The person being followed
+        following: { // The person being followed
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true
         },
-        followerId: { // The person who is following
+        follower: { // The person who is following
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true

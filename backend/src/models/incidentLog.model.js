@@ -21,10 +21,12 @@ const incidentLogSchema = new Schema(
             index : true
         },
         severity: {
-            type: String,
+            type: Number,
             required: true,
-            enum: ['Medium', 'High', 'Very High'],
-            default: 'Medium'
+            enum: [1, 2, 3],
+            default: 1
+            // enum: ['Medium', 'High', 'Very High'],
+            // default: 'Medium'
         },
         isPublic: {
             type: Boolean,
@@ -34,10 +36,12 @@ const incidentLogSchema = new Schema(
             type: String
         },
         learnings: { // "what we should have done"
+            //write in such a way that this is not just related to this 
+            //this will help for this type of context 
             type: String,
             required: true
         },
-        userId: {
+        owner: {
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true,

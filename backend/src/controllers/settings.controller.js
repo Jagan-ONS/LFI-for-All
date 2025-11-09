@@ -105,6 +105,8 @@ const logout = asyncHandler( async (req , res) =>{
     .json(new ApiResponse(200,{},"User Logged Out"))
 })
 
+//i have to update profile photo 
+
 export {
     updateDetails,
     updatePassword,
