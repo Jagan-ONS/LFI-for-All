@@ -3,12 +3,12 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
 
 const bookmarkSchema = new Schema(
     {
-        logId: {
+        log: {
             type: Schema.Types.ObjectId,
             ref: "IncidentLog",
             required: true
         },
-        userId: {
+        user: {
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true

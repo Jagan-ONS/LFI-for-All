@@ -5,7 +5,7 @@ const journalSchema = new Schema(
     {
         type: {
             type: String,
-            enum: ['daily', 'weekly', 'monthly', 'yearly', 'singleLine', 'project'],
+            enum: ['daily', 'weekly', 'monthly','singleLine', 'project'],
             default: 'daily'
         },
         isProtected: { 
