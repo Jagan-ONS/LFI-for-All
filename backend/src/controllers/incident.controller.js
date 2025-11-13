@@ -90,6 +90,107 @@ const getAllIncidents = asyncHandler(async (req, res) => {
 });
 
 /**
+ * @description Search ALL *PUBLIC* incident logs from *ALL* users.
+ * @route GET /api/v1/incidents/search
+ * @query page, limit, search, category, severity, sortBy, sortOrder
+ */
+export const searchGlobalIncidents = asyncHandler(async (req, res) => {
+    // --- 1. Get query params ---
+    const {
+        page = 1,
+        limit = 10,
+        search,
+        category,
+        severity,
+        sortBy = "createdAt", // Default sort
+        sortOrder = "desc"    // Default sort order
+    } = req.query;
+
+    // --- 2. Build the Aggregation Pipeline ---
+    const aggregate = IncidentLog.aggregate();
+
+    // STAGE 1: (CRITICAL) Match only PUBLIC logs
+    aggregate.match({
+        isPublic: true
+    });
+
+    // STAGE 2: Handle Search Query
+    if (search) {
+        aggregate.match({
+            $or: [
+                { title: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } }
+            ]
+        });
+    }
+
+    // STAGE 3: Handle Filters
+    const filterMatch = {};
+    if (category) {
+        filterMatch.category = category.toLowerCase();
+    }
+    if (severity) {
+        const severityNum = parseInt(severity);
+        if (![1, 2, 3].includes(severityNum)) {
+            throw new ApiError(400, "Invalid severity. Must be 1, 2, or 3.");
+        }
+        filterMatch.severity = severityNum;
+    }
+    if (Object.keys(filterMatch).length > 0) {
+        aggregate.match(filterMatch);
+    }
+
+    // STAGE 4: Handle Sorting
+    const sortCriteria = {};
+    sortCriteria[sortBy] = sortOrder === 'asc' ? 1 : -1;
+    aggregate.sort(sortCriteria);
+
+    // STAGE 5: Populate the Owner's details
+    // We must do this so the frontend can show who wrote the log.
+    aggregate.lookup({
+        from: "users", // The name of the users collection
+        localField: "owner",
+        foreignField: "_id",
+        as: "ownerDetails"
+    });
+
+    // STAGE 6: $unwind the ownerDetails array
+    aggregate.unwind("$ownerDetails");
+
+    // STAGE 7: Project a clean output
+    // We only want to expose public user info (username, avatar),
+    // NOT their email or other private fields.
+    aggregate.project({
+        // Incident fields
+        title: 1,
+        description: 1,
+        category: 1,
+        severity: 1,
+        learnings: 1,
+        doneBad: 1,
+        createdAt: 1,
+        
+        // Owner fields (from the lookup)
+        owner: {
+            _id: "$ownerDetails._id",
+            username: "$ownerDetails.username",
+            avatar: "$ownerDetails.avatar" // Assuming you have an avatar field
+        }
+    });
+
+    // --- 3. Execute Aggregation with Pagination ---
+    const options = {
+        page: parseInt(page, 10),
+        limit: parseInt(limit, 10)
+    };
+
+    const paginatedLogs = await IncidentLog.aggregatePaginate(aggregate, options);
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, paginatedLogs, "Global logs fetched successfully"));
+});
+/**
  * @description Create a new incident log.
  * @route POST /api/v1/incidents
  */
