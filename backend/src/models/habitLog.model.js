@@ -30,7 +30,8 @@ const habitLogSchema = new Schema(
 );
 
 // Ensures a user can only log a habit once per day
-// habitLogSchema.index({ habitId: 1, logDate: 1 }, { unique: true });
+// TODO: know about this 
+habitLogSchema.index({ habitId: 1, logDate: 1,userId : 1 }, { unique: true });
 
 //do we need paginate 
 //we use this for just populating the habbit page 
