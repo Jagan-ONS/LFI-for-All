@@ -191,7 +191,7 @@ const getTopInsights = asyncHandler(async (req, res) => {
                     // _id: 0, // Don't include the log's _id
                     // title: "$title",
                     learning: "$learnings", // The main insight
-                    // mistake: "$doneBad",  // The associated mistake
+                    mistake: "$doneBad",  // The associated mistake
                     // severity: "$severity",
                     incidentId: "$_id" // Send the ID in case they want to click
                 }
