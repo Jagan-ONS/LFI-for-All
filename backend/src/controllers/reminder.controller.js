@@ -25,7 +25,11 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { IncidentLog } from "../models/incidentLog.model.js";
 import { Reminder } from "../models/reminder.model.js";
 
-//
+
+import {CronExpressionParser} from "cron-parser"
+
+// const CronExpressionParser = require("cron-parser")
+
 const getFilteredReminders = asyncHandler( async (req,res)=>{
     // const {startDate , endDate ,reminderType, reminderCategory} = req.query
     // //default value for the startDate is the starting of this month 
@@ -53,7 +57,7 @@ const getFilteredReminders = asyncHandler( async (req,res)=>{
     const defaultStartDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0); 
     
     // Default: End of the current month (JS trick: Day 0 of next month is last day of current)
-    const defaultEndDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    const defaultEndDate = new Date(now.getFullYear(), now.getMonth() + 1 , 0, 23, 59, 59);
 
     // Use user-provided dates if they exist, otherwise use our defaults
     // We also wrap them in new Date() to ensure they are date objects
@@ -118,16 +122,25 @@ const getFilteredReminders = asyncHandler( async (req,res)=>{
                 const options = {
                     startDate: startDate,
                     endDate: endDate,
-                    iterator: true // This allows us to use .hasNext()
                 };
                 
                 // Parse the rule
-                const interval = parseExpression(reminder.cronRule, options);
+                const interval = CronExpressionParser.parse(reminder.cronRule, options);
 
                 // .hasNext() returns true if there is *at least one*
                 // occurrence within our start/end date range.
-                if (interval.hasNext()) {
-                    finalReminders.push(reminder);
+                while (true) {
+                    try {
+                        const date = interval.next().toDate();
+                        if(date < startDate) break;
+                        if(date > endDate) break;
+                        finalReminders.push({
+                            reminder,
+                            Date : date
+                        });
+                    } catch (error) {
+                        break;
+                    }
                 }
             } catch (err) {
                 console.error(`Invalid cron rule for reminder ${reminder._id}: ${err.message}`);
@@ -155,6 +168,7 @@ const getFilteredReminders = asyncHandler( async (req,res)=>{
         .json(new ApiResponse(200, finalReminders, "Reminders filtered successfully"));
 })
 
+
 const addPeriodicReminder = asyncHandler( async (req,res)=>{
     //how to add a periodic reminder 
     //how to ask the user to enter a periodic reminder 
@@ -181,13 +195,9 @@ const addPeriodicReminder = asyncHandler( async (req,res)=>{
     }
 
     // 3. Validate the cronRule
-    // This is a crucial security and stability check.
-    try {
-        // We use cron-parser to make sure the rule is valid
-        parseExpression(cronRule);
-    } catch (err) {
-        // If the frontend sends a bad string (e.g., "every tuesday"), this will fail
-        throw new ApiError(400, `Invalid cronRule format: ${err.message}`);
+    const validObject = cronValidator.isValidCronExpression(cronRule,{error : true});
+    if(!validObject){
+        throw new ApiError(400, `Invalid cronRule format: ${validObject.errorMessage}`);
     }
 
     // 4. Create the reminder
@@ -221,7 +231,11 @@ const addPeriodicReminder = asyncHandler( async (req,res)=>{
 //     //happened the current month 
 // })
 
-export const getCalendarMonthData = asyncHandler(async (req, res) => {
+const getCalendarMonthData = asyncHandler(async (req, res) => {
+    // console.log("This is the cron expression parser class")
+    // console.log(CronExpressionParser)
+    // console.log(cronParser);
+    console.log(typeof CronExpressionParser , CronExpressionParser ); 
     const userId = req.user._id;
 
     // --- 1. Get Date Range from Query ---
@@ -254,6 +268,10 @@ export const getCalendarMonthData = asyncHandler(async (req, res) => {
         date: incident.createdAt.toISOString().split('T')[0], // "YYYY-MM-DD"
     }));
 
+    //THINK : what's better just send dates for the frontend , if he click on some date 
+    //we will send all the incidenets and reminders 
+    // just send the whole data now it self 
+
     // --- 3. Fetch Reminder Markers ---
     
     const reminderData = [];
@@ -284,20 +302,31 @@ export const getCalendarMonthData = asyncHandler(async (req, res) => {
             const options = {
                 startDate: startDate,
                 endDate: endDate,
-                iterator: true // Allows us to loop
+                // iterator: true // Allows us to loop
             };
-            const interval = parseExpression(reminder.cronRule, options);
-            
+            const interval = CronExpressionParser.parse(reminder.cronRule, options);
+            // we have some cron rule we have to get all the dates which 
+            // can be reached with that cron rule and also those dates should lie 
+            // in b/w start and end dates 
+            // how can we do that 
             // Loop through ALL occurrences in this month
-            while (interval.hasNext()) {
-                const date = interval.next().toDate();
-                reminderData.push({
-                    date: date.toISOString().split('T')[0],
-                    type: reminder.reminderType
-                });
+            while (true) {
+                try {
+                    const date = interval.next().toDate();
+                    if(date < startDate) break;
+                    if(date > endDate) break;
+                    reminderData.push({
+                        date: date.toISOString().split('T')[0],
+                        type: reminder.reminderType
+                    });
+                } catch (error) {
+                    break;
+                }
             }
         } catch (err) {
-            console.error(`Invalid cron rule for reminder ${reminder._id}: ${err.message}`);
+            console.log(err)
+            throw new ApiError(400,`Invalid cron rule for reminder ${reminder._id}: ${err.message}`)
+            // console.error(`Invalid cron rule for reminder ${reminder._id}: ${err.message}`);
         }
     }
 
@@ -368,19 +397,24 @@ const getDetailsForDay = asyncHandler(async (req, res) => {
     });
 
     const finalPeriodicReminders = [];
+    let cnt = 1;
     for (const reminder of periodicReminders) {
+        console.log(cnt++);
         try {
             const options = {
                 startDate: dayStart,
                 endDate: dayEnd,
-                iterator: true
             };
-            const interval = parseExpression(reminder.cronRule, options);
+            const interval = CronExpressionParser.parse(reminder.cronRule, options);
             
-            // If it has at least one occurrence today, add it to the list
-            if (interval.hasNext()) {
-                // We add the *full* reminder object
-                finalPeriodicReminders.push(reminder);
+            while (true) {
+                try {
+                    const date = interval.next().toDate();
+                    // if(date > dayEnd) break;
+                    finalPeriodicReminders.push(reminder);
+                } catch (error) {
+                    break;
+                }
             }
         } catch (err) {
             console.error(`Invalid cron rule for reminder ${reminder._id}: ${err.message}`);

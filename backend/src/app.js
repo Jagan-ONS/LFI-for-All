@@ -51,9 +51,13 @@ app.use(passport.session())
 initializeSocketIO(io)
 
 import userRouter from "./routes/user.routes.js"
+import settingsRouter from "./routes/setting.routes.js"
+import reminderRouter from "./routes/reminder.routes.js"
 
 app.use('/api/v1/users',userRouter)
+app.use('/api/v1/settings',settingsRouter)
+app.use("/api/v1/reminders",reminderRouter)
 
-startScheduler(io)
+// startScheduler(io)
 
 export { app }

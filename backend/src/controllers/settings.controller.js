@@ -2,10 +2,10 @@
 //change pass 
 //logout 
 
-import { User } from "../models/user.model";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
+import { User } from "../models/user.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const updatePassword = asyncHandler(async (req , res) => {
     //we get the old pass word 
@@ -21,15 +21,19 @@ const updatePassword = asyncHandler(async (req , res) => {
     
     user.password = newPassword
     await user.save({validateBeforeSave : false})
+    console.log(user);
     return res
+    .status(200)
+    .json(new ApiResponse(200,[],"user details after updating password"))
 })
 
 const updateDetails = asyncHandler(async (req,res) => {
     const {fullName,bio} = req.body
+    console.log(req.body)
     if(!fullName|| !bio){
         throw new ApiError(400,"All feilds are required")
     }
-    const user = User.findByIdAndUpdate(
+    const user =await User.findByIdAndUpdate(
         req.user?._id,
         {
             $set : {
@@ -40,7 +44,7 @@ const updateDetails = asyncHandler(async (req,res) => {
         {
             new : true
         }
-    ).select("-password")
+    ).select("-password -refreshToken")
 
     //don't we need to ask for password and verify before updating ?? 
 
@@ -64,11 +68,9 @@ const updateEmail = asyncHandler(async (req, res) => {
     if (!isPasswordCorrect) {
         throw new ApiError(401, "Invalid password");
     }
-
     // 3. Update the email
     user.email = newEmail;
     await user.save({ validateBeforeSave: false }); // Skip validation on other fields
-
     return res.status(200).json(
         new ApiResponse(200, user, "Email updated successfully")
     );

@@ -1,7 +1,7 @@
 import cron from 'node-cron';
 import { Reminder } from '../models/reminder.model.js';
 import { sendNotification } from '../services/notification.service.js';
-import { parseExpression } from 'cron-parser'; // You need: npm install cron-parser
+import  parseExpression  from 'cron-parser'; // You need: npm install cron-parser
 
 /**
  * Initializes and starts the reminder scheduler.
@@ -14,7 +14,7 @@ export function startScheduler(io) {
     // This schedules a task to run every minute, every day.
     cron.schedule('* * * * *', async () => {
         const now = new Date();
-        
+        console.log(now);
         // --- BLOCK 1: Handle 10-Minute Warnings for Time-Sensitive Events ---
         // We will check for 'manual' and 'scheduled' reminders.
         

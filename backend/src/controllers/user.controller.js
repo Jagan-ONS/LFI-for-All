@@ -4,6 +4,7 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import {User} from "../models/user.model.js"
 import jwt from "jsonwebtoken"
+import mongoose from "mongoose"
 //controllers means the functions or the logic we have to execute when we click something
 //clicking something means hitting some route
 
@@ -35,7 +36,7 @@ const registerUser = asyncHandler( async (req,res)=>{//using just mail pass
 
     //get the localPath of profile path //for now let say it's mandatory
     const avatarLocalPath = req.file.path;
-    
+    console.log(avatarLocalPath);
     //if no avatarLocalPath throw error
     if(!avatarLocalPath){
         throw new ApiError(400,"Avatar file is required")
@@ -82,6 +83,7 @@ const loginUser = asyncHandler(async (req,res) => {
 
     //user sends mail and pass through req body
     //ans user is added to the req while verification 
+    console.log(req.body)
     const {email,password} = req.body
     // const userId = req.user._id we don't know this yet
 
@@ -92,6 +94,7 @@ const loginUser = asyncHandler(async (req,res) => {
 
     //get the userdetails of the user with userId 
     const user = await User.findOne({email});
+    console.log("this is the user details of the logged in user : " , user);
 
     //if there is no user with userId as given 
     if(!user){
@@ -108,7 +111,9 @@ const loginUser = asyncHandler(async (req,res) => {
     //to be sent 
 
     //if correct then genereate access and refresh tokens 
-    const {accessToken , refreshToken} = await generateAccessTokenAndRefreshToken(user._id)
+    const {accessToken , refreshToken} = await generateAccessAndRefreshTokens(user._id)
+    console.log("access token ->", accessToken);
+    console.log("refresh token ->",refreshToken);
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
@@ -189,10 +194,12 @@ const refreshAccessToken = asyncHandler(async (req,res) => {
 //this funciton takes an userid and generates access and refresh tokens
 const generateAccessAndRefreshTokens = async(userId) => {
     //why haven't we used async handler
+    console.log(userId);
     try{
-        const user = await User.findById({userId});
+        const user = await User.findById(userId);
         //we bypass this user is there or not check since if we are using this funciton means
-        //we are already a authorized user 
+        //we are already a authorized user
+        console.log(user); 
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
         user.refreshToken = refreshToken

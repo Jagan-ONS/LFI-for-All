@@ -9,7 +9,7 @@ import { HabitLog } from "../models/habitLog.model.js";
  * @description Get all data needed to render the habit grid for a specific month.
  * @route GET /api/v1/habits/month-data?year=2025&month=11
  */
-export const getHabitPageData = asyncHandler(async (req, res) => {
+const getHabitPageData = asyncHandler(async (req, res) => {
     const { year, month } = req.query; // month is 1-indexed (Jan=1)
     const userId = req.user._id;
 
@@ -56,7 +56,7 @@ export const getHabitPageData = asyncHandler(async (req, res) => {
  * @description Create a new habit (a new "column").
  * @route POST /api/v1/habits
  */
-export const createHabit = asyncHandler(async (req, res) => {
+const createHabit = asyncHandler(async (req, res) => {
     const { name, description, minTime } = req.body;
 
     if (!name) {
@@ -83,7 +83,7 @@ export const createHabit = asyncHandler(async (req, res) => {
  * This is an "upsert" operation.
  * @route POST /api/v1/habits/log
  */
-export const logHabit = asyncHandler(async (req, res) => {
+const logHabit = asyncHandler(async (req, res) => {
     const { habitId, logDate, description, timeSpent } = req.body;
     const userId = req.user._id;
 
@@ -130,7 +130,7 @@ export const logHabit = asyncHandler(async (req, res) => {
  * @description Deletes a single habit log (clears a "cell").
  * @route DELETE /api/v1/habits/log/:logId
  */
-export const deleteHabitLog = asyncHandler(async (req, res) => {
+const deleteHabitLog = asyncHandler(async (req, res) => {
     const { logId } = req.params;
 
     const log = await HabitLog.findOneAndDelete({
@@ -151,7 +151,7 @@ export const deleteHabitLog = asyncHandler(async (req, res) => {
  * @description Updates the details of a Habit (the "column").
  * @route PATCH /api/v1/habits/:habitId
  */
-export const updateHabit = asyncHandler(async (req, res) => {
+const updateHabit = asyncHandler(async (req, res) => {
     const { habitId } = req.params;
     const { name, description, minTime } = req.body;
 
@@ -184,7 +184,7 @@ export const updateHabit = asyncHandler(async (req, res) => {
  * @description Deletes a Habit (the "column") and ALL its logs.
  * @route DELETE /api/v1/habits/:habitId
  */
-export const deleteHabit = asyncHandler(async (req, res) => {
+const deleteHabit = asyncHandler(async (req, res) => {
     const { habitId } = req.params;
 
     // 1. Find and delete the habit, while checking ownership
@@ -204,3 +204,12 @@ export const deleteHabit = asyncHandler(async (req, res) => {
         .status(200)
         .json(new ApiResponse(200, {}, "Habit and all its logs deleted successfully."));
 });
+
+export {
+    deleteHabit,
+    updateHabit,
+    deleteHabitLog,
+    logHabit,
+    createHabit,
+    getHabitPageData
+}
