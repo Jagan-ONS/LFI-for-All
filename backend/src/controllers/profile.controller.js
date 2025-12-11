@@ -14,7 +14,7 @@ import { JournalEntry } from "../models/journalEntry.model.js";
  * (grouped by category and severity) in parallel.
  * @route GET /api/v1/profile/header
  */
-export const getProfileHeader = asyncHandler(async (req, res) => {
+const getProfileHeader = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
     // We run all these database queries in parallel for maximum speed
@@ -82,7 +82,7 @@ export const getProfileHeader = asyncHandler(async (req, res) => {
  * list of high-severity incident dates for "red dots".
  * @route GET /api/v1/profile/timeline?category=contest
  */
-export const getProfileTimelineGraph = asyncHandler(async (req, res) => {
+const getProfileTimelineGraph = asyncHandler(async (req, res) => {
     const userId = req.user._id;
     const { category } = req.query;
 
@@ -160,7 +160,7 @@ export const getProfileTimelineGraph = asyncHandler(async (req, res) => {
  * Levels: 3 (Sev 3), 2 (Sev 2), 1 (Sev 1), 0 (Journal)
  * @route GET /api/v1/profile/heatmap?year=2025
  */
-export const getProfileHeatmap = asyncHandler(async (req, res) => {
+const getProfileHeatmap = asyncHandler(async (req, res) => {
     const userId = req.user._id;
     const { year } = req.query;
 
@@ -244,3 +244,9 @@ export const getProfileHeatmap = asyncHandler(async (req, res) => {
         .status(200)
         .json(new ApiResponse(200, heatmapData, "Profile heatmap data fetched successfully"));
 });
+
+export {
+    getProfileHeader,
+    getProfileTimelineGraph,
+    getProfileHeatmap
+}

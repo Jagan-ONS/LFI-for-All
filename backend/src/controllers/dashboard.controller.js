@@ -359,7 +359,6 @@ const getQuickInsights = asyncHandler(async(req,res) => {
 
 export {
     getFeed,
-    getMostFollowedUsers,
     getMostLikedIncidents,
     getNearestReminders,
     getTopInsights,

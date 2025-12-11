@@ -53,11 +53,20 @@ initializeSocketIO(io)
 import userRouter from "./routes/user.routes.js"
 import settingsRouter from "./routes/setting.routes.js"
 import reminderRouter from "./routes/reminder.routes.js"
+import profileRouter from "./routes/profile.routes.js"
+import journalRouter from "./routes/journal.routes.js"
+import incidentRouter from "./routes/incident.routes.js"
+import habitRouter from "./routes/habit.routes.js"
+import dashboardRouter from "./routes/dashboard.routes.js"
 
 app.use('/api/v1/users',userRouter)
 app.use('/api/v1/settings',settingsRouter)
 app.use("/api/v1/reminders",reminderRouter)
-
+app.use("/api/v1/profiles",profileRouter)
+app.use("/api/v1/journals",journalRouter)
+app.use("/api/v1/incidents",incidentRouter)
+app.use("/api/v1/habits",habitRouter)
+app.use("/api/v1/dashboards",dashboardRouter)
 // startScheduler(io)
 
 export { app }
